@@ -66,7 +66,7 @@ class Parameter(object):
 
     ParameterName must be alphanumeric, allowing _ too.
     Iinit/Min/MaxValue can be integer or float
-    ParameterType is optional (float by default), and indicated 
+    ParameterType is optional (float by default), and indicated
     by either 'i'(int) or 'f'(float)
     White space separation is mandatory.
     """
@@ -75,7 +75,7 @@ class Parameter(object):
 
     def __init_from_kwargs(self, name, **kwargs):
         """
-        Look for one obligatory argument -- name, and 
+        Look for one obligatory argument -- name, and
         the rest is optional.
         """
         self.name = name

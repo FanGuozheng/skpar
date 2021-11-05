@@ -39,7 +39,7 @@ def parse_weights_keyval(spec, data, normalised=True):
                 data = numpy.loadtxt(file, **loader_args)
 
     Returns:
-        numpy.array: weights corresponding to each key in `data`, 
+        numpy.array: weights corresponding to each key in `data`,
             with the same length as `data`.
     TODO:
         Log warning if a key in `spec` (other than 'dflt') is not found
@@ -47,13 +47,13 @@ def parse_weights_keyval(spec, data, normalised=True):
     """
     if isinstance(spec, list) or isinstance(spec, np.ndarray):
         # if spec enumerates weights as a list or array, nothing to do
-        assert len(spec)==len(data) 
+        assert len(spec)==len(data)
         ww = spec
     else:
         # otherwise parse specification to write out the weights
         # initialise default values
         dflt = spec.get('dflt', 0)
-        # Key assumption: data is a structured array, where the keys 
+        # Key assumption: data is a structured array, where the keys
         # are already encoded as b'string', hence the use of .encode() below.
         nn = len(data)
         ww = np.ones(nn)*dflt
@@ -66,7 +66,7 @@ def parse_weights_keyval(spec, data, normalised=True):
         ww = normalise(ww)
     return ww
 
-def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True, 
+def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True,
                   ikeys=None, rikeys=None, rfkeys=None):
     """Parse the specification defining weights corresponding to some data.
 
@@ -77,13 +77,13 @@ def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True,
     associate a weight with the given range.
     A list of floats is also accepted, and an array view is returned,
     for cases where weights are explicitly enumerated, but no check for length.
-    
+
     To give freedom of the user (i.e. the caller), the way that ranges
     are specified is enumerated by the caller by optional arguments --
     see `ikeys`, `rikeys` and `rfkeys` below.
-    
+
     Args:
-        spec (array-like or dict): values or specification of the subweights, 
+        spec (array-like or dict): values or specification of the subweights,
             for example:
 
             spec = """ """
@@ -110,9 +110,9 @@ def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True,
             values must be specified
         nn (int): length of `refdata` (and corresponding weights)
         shape (tuple): shape of `reference` data, if it is array but not given
-        i0 (int): index to be assumed as a reference, i.e. 0, when 
+        i0 (int): index to be assumed as a reference, i.e. 0, when
             enumerating indexes explicitly or by a range specification.
-        ikeys (list of strings): list of keys to be parsed for explicit 
+        ikeys (list of strings): list of keys to be parsed for explicit
             index specification, e.g. ['indexes', 'Ek']
         rikeys (list of strings): list of keys to be parsed for range of
             indexes specification, e.g. ['ranges', 'bands']
@@ -150,7 +150,7 @@ def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True,
                     # assume i0 and i are int
                     ww[i0+i-1] = w
                 except TypeError:
-                    # if it turns out i is a tuple (i.e. an E-k point), 
+                    # if it turns out i is a tuple (i.e. an E-k point),
                     # then apply the shift only to i[0].
                     # this works if we specify E-k point (band, k-point)
                     # but is somewhat restrictive in the more general context
@@ -167,7 +167,7 @@ def parse_weights(spec, refdata=None, nn=1, shape=None, i0=0, normalised=True,
         for k in rfkeys:
             assert refdata.shape == ww.shape
             for rng, w in spec.get(k, []):
-                ww[(rng[0] <= refdata) & 
+                ww[(rng[0] <= refdata) &
                    (refdata <= rng[1]) &
                    # permit overlapping weights, larger value overrides:
                    (ww < w)] = w
@@ -180,7 +180,7 @@ def get_models(models):
     """Return the models (names) and corresponding weights if any.
 
     Args:
-        models (str, list of str, list of [str: float] items): The 
+        models (str, list of str, list of [str: float] items): The
             string is always a model name. If [str: float] items
             are given, the float has the meaning of weight, associated
             with the model.
@@ -210,7 +210,7 @@ def get_type(n_models, ref, dflt_type='values'):
     obj_type = dflt_type
     # If we have more than one model but just one scalar as reference
     # obviously we need scalarization (reduction) routine. We assume
-    # the simplest -- weighted sum type; other types must be explicitly 
+    # the simplest -- weighted sum type; other types must be explicitly
     # stated
     if n_models > 1 and ref.shape == (1,):
         obj_type = 'weighted_sum' # other types of scalarization must be explicit
@@ -242,7 +242,7 @@ class Objective(object):
         """Instantiate the objective and set non-specific attributes.
 
         Must be extended to declare a Query and possibly -- CostFunction.
-        By 'extend', we mean super().__init__() is called within the 
+        By 'extend', we mean super().__init__() is called within the
         child's own __init__().
         That however should be done in a way that is specific to the
         type of objective.
@@ -327,12 +327,12 @@ class Objective(object):
         s.append("{:9s}{:<15s}: {}".format("", "Query", self.query_key))
         s.append("{:9s}{:<15s}: {}".format("", "Models", pformat(self.model_names)))
         if hasattr(self, 'model_weights'):
-            s.append("{:9s}{:<15s}: {}".format("", "Model weights", 
+            s.append("{:9s}{:<15s}: {}".format("", "Model weights",
                     arr2s(self.model_weights)))
-        s.append ("{:9s}{:<15s}: {}".format("", "Reference data", 
+        s.append ("{:9s}{:<15s}: {}".format("", "Reference data",
                 arr2s(self.ref_data)))
         if hasattr(self, 'subweights'):
-            s.append("{:9s}{:<15s}: {}".format("", "Sub-weights", 
+            s.append("{:9s}{:<15s}: {}".format("", "Sub-weights",
                     arr2s(self.subweights)))
         #s.append ("Options:\n{}".format(pformat(self.options)))
         if hasattr(self, 'Model_data'):
@@ -418,7 +418,7 @@ class ObjKeyValuePairs(Objective):
         super().__init__(spec, **kwargs)
         # parse reference data options
         self.options = spec.get('options', None)
-        # NOTABENE: we will replace self.ref_data, trimming the 
+        # NOTABENE: we will replace self.ref_data, trimming the
         #           items with null weight
         nn = len(self.ref_data)
         # default options
@@ -473,10 +473,10 @@ def get_subset_ind(rangespec):
 
 def get_refval_1d(array, align, ff={'min': np.min, 'max': np.max}):
     """Return a reference (alignment) value selected from an array.
-    
+
     Args:
         array (1D numpy array): data from which to obtain a reference value.
-        align: specifier that could be and index, e.g. 3, or 'min', 'max' 
+        align: specifier that could be and index, e.g. 3, or 'min', 'max'
         ff (dict): Dictionary mapping string names to functions that can
                 operate on an 1D array.
 
@@ -485,9 +485,9 @@ def get_refval_1d(array, align, ff={'min': np.min, 'max': np.max}):
     """
     assert isinstance(align, int) or align in ['min', 'max'],\
             '"align" must be int or "min" or "max".'
-    # Transform indexing to python-style, counting from 0, assuming 
+    # Transform indexing to python-style, counting from 0, assuming
     # 'align' came from user specification, fortran-compatible, counting from 1
-    ik = align - 1  
+    ik = align - 1
     try:
         value = array[ik]
     except TypeError:
@@ -496,7 +496,7 @@ def get_refval_1d(array, align, ff={'min': np.min, 'max': np.max}):
 
 def get_refval(bands, align, ff={'min': np.min, 'max': np.max}):
     """Return a reference (alignment) value selected from a 2D array.
-    
+
     Args:
         bands (2D numpy array): data from which to obtain a reference value.
         align: specifier that could be (band-index, k-point), or
@@ -508,9 +508,9 @@ def get_refval(bands, align, ff={'min': np.min, 'max': np.max}):
         value (float): the selected value
     """
     assert isinstance(align[0], int), '"align" must be (int,int) or (int, "min" or "max").'
-    # Transform indexing to python-style, counting from 0, assuming 
+    # Transform indexing to python-style, counting from 0, assuming
     # 'align' came from user specification, fortran-compatible, counting from 1
-    iband = align[0] - 1  
+    iband = align[0] - 1
     try:
         ik = align[1] - 1
         value = bands[iband,ik]
@@ -552,7 +552,7 @@ class ObjBands(Objective):
             # Extract only the ref_data corresponding to the subset index
             # This returns a new array; the old ref_data is lost from here on. Do we care?
             self.ref_data = self.ref_data[subset_ind]
-            # Since we re-shape self.ref_data, we must reshape 
+            # Since we re-shape self.ref_data, we must reshape
             # the corresponding subweights too.
             # Note that user spec of subweigths is not parsed yet!
             self.subweights = np.ones(self.ref_data.shape)
@@ -581,8 +581,8 @@ class ObjBands(Objective):
 
         shape = self.ref_data.shape
         if subwspec is not None:
-            self.subweights = parse_weights(subwspec, refdata=self.ref_data, 
-                    normalised=self.normalised, 
+            self.subweights = parse_weights(subwspec, refdata=self.ref_data,
+                    normalised=self.normalised,
                     # the following are optional, and generic enough
                     # "indexes" is for a point in a 2D array
                     # "bands" is for range of bands (rows), etc.
@@ -596,7 +596,7 @@ class ObjBands(Objective):
                 self.subweights = np.ones(shape)/self.ref_data.size
             else:
                 self.subweights = np.ones(shape)
-        
+
     def get(self, database):
         """Return the value of the objective function.
         """
@@ -627,14 +627,14 @@ def get_refdata(data):
     """Parse the input data and return a corresponding array.
 
     Args:
-        data (array or array-like, or a dict): Data, being the 
+        data (array or array-like, or a dict): Data, being the
             reference data itself, or a specification of how to get
             the reference data. If dictionary, it should either
             contain key-value pairs of reference items, or contain
             a 'file' key, storing the reference data.
 
     Returns:
-        array: an array of reference data array, subject to all loading 
+        array: an array of reference data array, subject to all loading
             and post-processing of a data file, or pass `data` itself,
             transforming it to an array as necessary.
     """
@@ -690,7 +690,7 @@ def get_refdata(data):
                         array_data = np.delete(array_data, obj=indexes, axis=axis)
                 scale = postprocess.get('scale', 1)
                 array_data = array_data * scale
-            
+
             return_data = array_data
         else:
             try:
@@ -755,7 +755,7 @@ def set_objectives(spec, verbose=True, **kwargs):
             specification of an objective of a recognised type.
 
     Returns:
-        list: a List of instances of the Objective sub-class, each 
+        list: a List of instances of the Objective sub-class, each
             corresponding to a recognised objective type.
     """
     if spec is None:
@@ -771,4 +771,3 @@ def set_objectives(spec, verbose=True, **kwargs):
         for objv in objectives:
             LOGGER.info(objv.__repr__())
     return objectives
-

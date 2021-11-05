@@ -32,7 +32,7 @@ def execute(cmd, workdir='.', outfile='run.log', purge_workdir=False, **kwargs):
     """Execute external command in workdir, streaming output/error to outfile.
 
     Args:
-        cmd (str): command; executed in `workir`; if it contains `$` or 
+        cmd (str): command; executed in `workir`; if it contains `$` or
                    `*`-globbing, these are shell-expanded
         workdir (path-like): execution directory relative to workroot
         outfile (str): output file for the stdout/stderr stream; continuously
@@ -71,6 +71,7 @@ def execute(cmd, workdir='.', outfile='run.log', purge_workdir=False, **kwargs):
     # execute the command, make sure output is not streamed
     _cmd = parse_cmd(cmd)
     try:
+        print('_cmd      ', _cmd)
         returncode = subprocess.call(_cmd, **kwargs)
         if returncode:
             LOGGER.critical('Execution of {:s} FAILED with exit status {:d}'.

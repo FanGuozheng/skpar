@@ -43,7 +43,8 @@ objectives:
             # This is why, we must always transpose bands from dp_bands
             # or from vasputils, upon loading, and this is here accomplished
             # by the loader_args: {unpack: True} -- cf. numpy.loadtxt() for details.
-            file: ~/Dropbox/projects/skf-dftb/Erep fitting/from Alfred/crystal/DFT/di-Si.Markov/PS.100/band/band.dat
+            # file: ~/Dropbox/projects/skf-dftb/Erep fitting/from Alfred/crystal/DFT/di-Si.Markov/PS.100/band/band.dat
+            file: ./ref/Ek-Si.dat
             loader_args: {unpack: True}
             process:  
                 # indexes and ranges below refer to file, not array, 

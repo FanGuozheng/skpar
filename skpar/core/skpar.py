@@ -29,7 +29,7 @@ class SKPAR():
         # -------------------------------------------------------------------
         # parse input file
         self.logger.info('Parsing input file {:s}'.format(infile))
-        taskdict, tasklist, objectives, optimisation, config =\
+        taskdict, tasklist, objectives, optimisation, config = \
             parse_input(infile, verbose=verbose)
         if optimisation is not None:
             algo, options, parameters = optimisation

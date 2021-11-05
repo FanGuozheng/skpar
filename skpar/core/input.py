@@ -29,7 +29,7 @@ def get_input(filename):
         else:
         #if intype == 'yaml':
             try:
-                spec = yaml.load(infile)
+                spec = yaml.safe_load(infile)  # yaml.load(infile)
             except yaml.YAMLError:
                 LOGGER.warning('Input not a valid YAML')
                 raise

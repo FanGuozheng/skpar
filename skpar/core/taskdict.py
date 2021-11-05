@@ -80,6 +80,7 @@ def execute(implargs, database, cmd, workdir='.', outfile='run.log',
     # execute the command, make sure output is not streamed
     _cmd = parse_cmd(cmd)
     try:
+        print('_cmd, **kwargs', _cmd)
         returncode = subprocess.call(_cmd, **kwargs)
         if returncode:
             LOGGER.critical('Execution of %s FAILED with exit status %d',
@@ -131,7 +132,8 @@ def get_model_data(implargs, database, item, source, model,
     # read file
     fname = os.path.abspath(os.path.join(workroot, source))
     try:
-        data = np.loadtxt(fname, **kwargs)
+        print('fname', fname)
+        data = np.loadtxt(fname)  #, **kwargs)
     except ValueError:
         logger.critical('np.loadtxt cannot understand the contents of %s'+\
             'with the given arguments: %s', fname, **kwargs)
@@ -142,6 +144,8 @@ def get_model_data(implargs, database, item, source, model,
     # do some filtering on columns and/or rows if requested
     # note that file to 2D-array mapping depends on 'unpack' from
     # kwargs, which transposes the loaded array.
+    print('item', item, 'source', source, 'model', model,
+                       'rm_columns', rm_columns)
     postprocess = {'rm_columns': rm_columns, 'rm_rows': rm_rows}
     if any(postprocess.values()):
         if kwargs.get('unpack', False):
@@ -156,6 +160,8 @@ def get_model_data(implargs, database, item, source, model,
             if rm_rngs:
                 indexes = []
                 # flatten, combine and sort, then delete corresp. object
+                print('key1', key1, 'key2', key2, 'key', key)
+                print('rm_rngs', rm_rngs, 'postprocess', postprocess)
                 for rng in get_ranges(rm_rngs):
                     indexes.extend(list(range(*rng)))
                 indexes = list(set(indexes))

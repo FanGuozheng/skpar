@@ -10,21 +10,27 @@ tasks:
     # - get: [what, from_sourse(dir, file or dict), to_destination(dict), optional_kwargs]
     #        `what` is essentially a function name (see Get-Tasks dictionary)
     # ------------------------------------------------------------------------------
-    - set: [current.par, skf, skf/skdefs.template.py]   # update ./skf/skdefs.py
-    - run: [skgen, skf]                                 # generate SKF-set
-    - run: [bands, Si-diam]                             # run dftb+ and dp_bands in Si-diam
-    - get: [get_dftbp_bs, Si-diam/bs, Si.bs,            # get BS data and put in Si.bs model DB
+    # - set: [current.par, skf, skf/skdefs.template.py]   # update ./skf/skdefs.py
+    - set: [[current.par, skf/skdef.hsd, skf/skdefs.template.py]]   # update ./skf/skdefs.py
+    # - run: [skgen, skf]                                 # generate SKF-set
+    - run: [./skf/skgen.sh]                                 # generate SKF-set
+    # - run: [bands, Si-diam]                             # run dftb+ and dp_bands in Si-diam
+    - run: [./Si-diam/dftbutils.sh]                             # run dftb+ and dp_bands in Si-diam
+    # - get: [get_dftbp_bs, Si-diam/bs, Si.bs,            # get BS data and put in Si.bs model DB
+    - get: [get_dftbp_bs, Si-diam/bs/bands_tot.dat, Si.bs,           # get BS data and put in Si.bs model DB
             {latticeinfo: {type: 'FCC', param: 5.431}}] # must know the lattice for what follows
-    - get: [get_dftbp_meff, Si.bs,                      # get electron effective masses
-            {carriers: 'e', directions: ['Gamma-X'],    # note: destination is ommitted,
-             Erange: 0.005, usebandindex: True}]        #       hence update the sourse
-    - get: [get_dftbp_meff, Si.bs,                      # get hole effective masses
-            {carriers: 'h', directions: ['Gamma-X', 'Gamma-L', 'Gamma-K'],
-             nb: 3, Erange: 0.005}]
-    - get: [get_dftbp_Ek  , Si.bs,                      # get eigen-values at special points
+    # # - get: [get_dftbp_meff, Si.bs,                     # get electron effective masses
+    # - get: [get_dftbp_meff, ref/meff-Si.dat, Si.bs,             # get electron effective masses
+    #         {carriers: 'e', directions: ['Gamma-X'],    # note: destination is ommitted,
+    #           Erange: 0.005, usebandindex: True}]        #       hence update the sourse
+    # - get: [get_dftbp_meff, Si.bs,                      # get hole effective masses
+    #         {carriers: 'h', directions: ['Gamma-X', 'Gamma-L', 'Gamma-K'],
+    #           nb: 3, Erange: 0.005}]
+    # - get: [get_dftbp_Ek  , Si.bs,                      # get eigen-values at special points
+    - get: [get_dftbp_Ek, Si.bs, Si.bs,                   # get eigen-values at special points
             {sympts: ['L', 'Gamma', 'X', 'K'],
-             extract: {'cb': [0,1,2,3], 'vb': [0,1,2,3]},
-             align: 'Evb'}]
+              extract: {'cb': [0,1,2,3], 'vb': [0,1,2,3]},
+              align: 'Evb'}]
 
 objectives:
 
