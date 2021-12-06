@@ -11,6 +11,7 @@ from skpar.dftbutils.utils import get_logger, execute
 from skpar.dftbutils.queryDFTB import get_bandstructure
 from skpar.dftbutils.plot import plot_bs
 
+
 def set_bands_parser(parser=None):
     """Define parser options specific for band-structure calculations.
 

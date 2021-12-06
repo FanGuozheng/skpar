@@ -2,8 +2,8 @@
 Module for k-Lines extraction and k-Label manipulation
 
 Recall that bands contains NO information of the k-points.
-So we must provide that ourselves, and reading the dftb_pin.hsd (the parsed 
-input) seems the best way to do so. We also need to figure out what to do 
+So we must provide that ourselves, and reading the dftb_pin.hsd (the parsed
+input) seems the best way to do so. We also need to figure out what to do
 with equivalent points, or points where a new path starts.
 Finally, points internal to the Brilloin Zone are labeled with Greek letters,
 which should be rendered properly.
@@ -20,25 +20,25 @@ logger = logging.getLogger(__name__)
 
 def get_klines(lattice, hsdfile='dftb_pin.hsd', workdir=None, *args, **kwargs):
     """
-    This routine analyses the KPointsAndWeights stanza in the input file of DFTB+ 
-    (given as an input argument *hsdfile*), and returns the k-path, based on 
+    This routine analyses the KPointsAndWeights stanza in the input file of DFTB+
+    (given as an input argument *hsdfile*), and returns the k-path, based on
     the lattice object (given as an input argument *lattice*).
-    If the file name is not provided, the routine looks in the default 
+    If the file name is not provided, the routine looks in the default
     dftb_pin.hsd, i.e. in the parsed file!
 
     The routine returns a list of tuples (kLines) and a dictionary (kLinesDict)
-    with the symmetry points and indexes of the corresponding k-point in the 
-    output band-structure. 
+    with the symmetry points and indexes of the corresponding k-point in the
+    output band-structure.
 
     kLines is ordered, as per the appearence of symmetry points in the hsd input, e.g.:
 
         * [('L', 0), ('Γ', 50), ('X', 110), ('U', 130), ('K', 131), ('Γ', 181)]
 
     therefore it may contain repetitions (e.g. for 'Γ', in this case).
-    
+
     kLinesDict returns a dictionary of lists, so that there's a single entry for
     non-repetitive k-points, and more than one entries in the list of repetitive
-    symmetry k-points, e.g. (see for 'Γ' above): 
+    symmetry k-points, e.g. (see for 'Γ' above):
 
         * {'X': [110], 'K': [131], 'U': [130], 'L': [0], 'Γ': [50, 181]}
     """
@@ -70,7 +70,7 @@ def get_klines(lattice, hsdfile='dftb_pin.hsd', workdir=None, *args, **kwargs):
     # At this stage, kLines_dftb contains distances between k points
     #logger.debug('\tkLines_dftb: {}'.format(kLines_dftb))
     # Next, we convert it to index, from 0 to nk-1
-    kLines = [(lbl, sum([_dist for (_lbl,_dist) in kLines_dftb[:i+1]])-1) 
+    kLines = [(lbl, sum([_dist for (_lbl,_dist) in kLines_dftb[:i+1]])-1)
                         for (i,(lbl, dist)) in enumerate(kLines_dftb)]
     #logger.debug('\tkLines      : {}'.format(kLines))
     klbls = set([lbl for (lbl, nn) in kLines])

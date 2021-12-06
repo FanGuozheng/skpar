@@ -130,6 +130,7 @@ class EvaluateSiTest(unittest.TestCase):
         """
         filename   = "skpar_in_Si.yaml"
         testfolder = "test_eval_Si"
+        print('EvaluateSiTest')
         # parfile    = os.path.join(testfolder, 'current.par')
         taskdict, tasklist, objectives, optimisation, config =\
                 parse_input(filename)

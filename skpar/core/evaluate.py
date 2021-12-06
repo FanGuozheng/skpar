@@ -178,6 +178,7 @@ class Evaluator():
             os.chdir(workdir)
             try:
                 task(env, database)
+
             except:
                 self.logger.critical('Task %i FAILED:\n%s', i, task)
                 raise

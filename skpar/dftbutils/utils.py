@@ -71,7 +71,6 @@ def execute(cmd, workdir='.', outfile='run.log', purge_workdir=False, **kwargs):
     # execute the command, make sure output is not streamed
     _cmd = parse_cmd(cmd)
     try:
-        print('_cmd      ', _cmd)
         returncode = subprocess.call(_cmd, **kwargs)
         if returncode:
             LOGGER.critical('Execution of {:s} FAILED with exit status {:d}'.

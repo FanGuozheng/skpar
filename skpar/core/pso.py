@@ -6,59 +6,59 @@ Particle Swarm Optimizer (PSO)
 Particles
 ----------------------------------------------------------------------
 
-In PSO, a particle represents a set of parameters to be optimised. 
-Each parameter is therefore a degree of freedom of the particle.  
-Each particle is represented by its coordinate value. 
+In PSO, a particle represents a set of parameters to be optimised.
+Each parameter is therefore a degree of freedom of the particle.
+Each particle is represented by its coordinate value.
 Additionally it needs several attributes:
-    
+
     * fitness -- the quality of the set of parameters
-    
+
     * speed -- how much the position of the particle changes from one generation to the next
 
     * smin/smax -- speed limits (observed only initially, in the current implementation)
 
     * best -- particles own best position (i.e. with best fitness)
 
-Particle normalisaton/re-normalisation 
+Particle normalisaton/re-normalisation
 ----------------------------------------------------------------------
 
-Additionally to the above generic PSO-related attributes, we need to 
-introduce position normalisation as follows. The parameters giving the 
-particle coordinates may be with different physical meaning, magnitudes 
-and units. However, to keep the PSO generic, it is best to impose identical 
-scale in each dimension, so that particle range is the same in each direction.  
-This is achieved by normalising the parameters so that the particle position 
-in each dimension is between -1 and +1. However, when evaluating the fitness 
-of the particle, we need the renormalized values (i.e. the true values of 
-the parameters).  
+Additionally to the above generic PSO-related attributes, we need to
+introduce position normalisation as follows. The parameters giving the
+particle coordinates may be with different physical meaning, magnitudes
+and units. However, to keep the PSO generic, it is best to impose identical
+scale in each dimension, so that particle range is the same in each direction.
+This is achieved by normalising the parameters so that the particle position
+in each dimension is between -1 and +1. However, when evaluating the fitness
+of the particle, we need the renormalized values (i.e. the true values of
+the parameters).
 
 Hence we introduce three additional attributes:
-    
+
     * norm -- a list with the scaling factors for each dimension (:math:`\eta`),
 
     * shift -- offset of the parameter range from 0 (:math:`\sigma`),
 
     * renormalized -- the true value of the parameters (:math:`\lambda`) represented by the particle.
 
-The user must supply only the true range of the particle in the form of a tuple, 
-per dimension, e.g. :math:`(\lambda_{min}, \lambda_{max})`.  
+The user must supply only the true range of the particle in the form of a tuple,
+per dimension, e.g. :math:`(\lambda_{min}, \lambda_{max})`.
 
-Then :math:`(\lambda_{max}-\lambda_{min})\eta = 2.0`, or, 
-:math:`\eta = 2.0/(\lambda_2-\lambda_1)`, and 
+Then :math:`(\lambda_{max}-\lambda_{min})\eta = 2.0`, or,
+:math:`\eta = 2.0/(\lambda_2-\lambda_1)`, and
 :math:`\sigma = 0.5*(\lambda_{max}+\lambda_{min})`.
 
-So, the true particle position (for evaluations) is 
-:math:`\lambda = P/\eta + \sigma`, 
+So, the true particle position (for evaluations) is
+:math:`\lambda = P/\eta + \sigma`,
 where :math:`P` is the normalised position of the particle.
 
 
 ## Using particles
 
-Below, we have the declaration of the particle class and a couple of methods for 
-creation and evolution of the particle based on the PSO algorithm.   
+Below, we have the declaration of the particle class and a couple of methods for
+creation and evolution of the particle based on the PSO algorithm.
 
-Note that the evaluation of the fitness of the particle is problem specific and 
-the user must supply its own evaluation function and register it under the name 
+Note that the evaluation of the fitness of the particle is problem specific and
+the user must supply its own evaluation function and register it under the name
 ``evaluate`` with the toolbox.
 
 
@@ -66,10 +66,10 @@ Particle Swarm
 ----------------------------------------------------------------------
 
 The swarm is a a list of particles, with a couple of additional attributes:
-    
+
     * ``gbest`` -- globally the best particle (position) ever (i.e. accross any generation so far)
 
-    * ``gbestfit`` -- globally the best fitness (i.e. the quality value of gbest)   
+    * ``gbestfit`` -- globally the best fitness (i.e. the quality value of gbest)
 
 The swarm is declared, created and let to evolve with the help of the ``PSO`` class.
 """
@@ -91,7 +91,7 @@ def declareTypes(weights):
     Declare Particle class with fitting objectives (-1: minimization; +1 maximization).
     Each particle consists of a set of normalised coordinates, returned by the
     particle's instance itself. The true (physical) coordinates of the particle
-    are stored in the field 'renormalized'. The field 'best' contains the best 
+    are stored in the field 'renormalized'. The field 'best' contains the best
     fitness-wise position that the particle has ever had (in normalized coords).
     Declare also Swarm class; inherit from list + PSO specific attributes
     gbest and gbestfit.
@@ -113,7 +113,7 @@ def createParticle(prange, strict_bounds=True):
     coordinate in the i-th dimension within the prange[i] tuple.
     Note that the range is normalised and shifted, so that the result is a coordinate
     within -1 to 1 for each dimension, and initial speed between -.5 and +.5.
-    To get the true (i.e. physical) coordinates of the particle, 
+    To get the true (i.e. physical) coordinates of the particle,
     one must use part.renormalized field.
     Arguments:
         prange -- list of tuples. each tuple is a range of _initial_ coord.
@@ -123,7 +123,7 @@ def createParticle(prange, strict_bounds=True):
     """
     # size is the dimensionality (degrees of freedom) of the particle
     # prange is a list of tuples containing the _initial_ range of particle coordinates
-    # prange is effectively normalized so particle position is in [-1:+1], 
+    # prange is effectively normalized so particle position is in [-1:+1],
     # and the speedlimit is set to half the range
     size = len(prange)
     pmin, pmax, smin, smax = -1.0, 1.0, -1.0, 1.0
@@ -159,7 +159,7 @@ def pformat(part):
     except TypeError:
         pass
     return '\n'.join(ss)
-    
+
 
 def evolveParticle_0(part, best, phi1=2, phi2=2):
     """
@@ -168,7 +168,7 @@ def evolveParticle_0(part, best, phi1=2, phi2=2):
     Phi1/2 are also somewhat bigger than the Psi/Ki resulting from the optimal
     Psi = 2.9922
     A method to update the position and speed of a particle (part), according to the
-    original PSO algorithm of Ricardo Poli, James Kennedy and Tim Blackwell, 
+    original PSO algorithm of Ricardo Poli, James Kennedy and Tim Blackwell,
     'Particle swarm optimization: an overview'. Swarm Intelligence. 2007; 1: 33-57.
     Arguments:
         part -- instance of the particle class, the particle to be updated
@@ -237,7 +237,7 @@ def evolveParticle(part, best, inertia=0.7298, acceleration=2.9922, degree=2):
         new_pos = p + part.speed[i]
         if part.strict_bounds:
             # If strict bounds are imposed, then tackle the escape goat per dimension.
-            # Below, we realise a bounce, where the excess travel is reversed in 
+            # Below, we realise a bounce, where the excess travel is reversed in
             # direction. This reverses the persistence term, and reduces the
             # chance for a second escape. Gradually though, if gbest happens to
             # be in the vicinity of the boundary, the particle will find its way
@@ -257,7 +257,7 @@ def evolveParticle(part, best, inertia=0.7298, acceleration=2.9922, degree=2):
                         format(new_pos))
         part[i] = new_pos
     part.renormalized = list(map(operator.add, list(map(operator.truediv, part, part.norm)), part.shift))
-    # try recursion if we're out out 
+    # try recursion if we're out out
 #    if part.strict_bounds and not all([-1.0 < pp < 1.0 for pp in part]):
 #        # recreate particle, but keeps its history (best and past)
 #        module_logger.warning('Particle attempted to leave domain: \n'+pformat(part))
@@ -267,18 +267,18 @@ def evolveParticle(part, best, inertia=0.7298, acceleration=2.9922, degree=2):
 #        part.speed = newpart.speed
 #        part.renormalized = newpart.renormalized
 #        module_logger.info ('Particle repositioned inside domain: \n'+pformat(part))
-        
 
-# init arguments: 
+
+# init arguments:
 pso_init_args = ["npart", "objectives", "parrange", "evaluate"]
-pso_optinit_args   = ['ngen', 'ErrTol', 'strict_bounds'] 
+pso_optinit_args   = ['ngen', 'ErrTol', 'strict_bounds']
 
 # call arguments
 pso_call_args      = []
-pso_optcall_args   = ['ngen', "ErrTol", ] 
+pso_optcall_args   = ['ngen', "ErrTol", ]
 
-pso_dflts = {'npart': 10, 'ngen': 200, 'ErrTol': 0.001, 
-                'objective_weights': (-1,), 
+pso_dflts = {'npart': 10, 'ngen': 200, 'ErrTol': 0.001,
+                'objective_weights': (-1,),
                 'strict_bounds': True, }
 
 
@@ -289,7 +289,7 @@ def pso_args(**kwargs):
     args = {}
     optargs = {}
     for arg in pso_obligatory_args:
-        try: 
+        try:
             args[arg] = kwargs[arg]
         except KeyError:
             errormsg = "PSO missing obligatory argument {0}\n".format(arg)+\
@@ -298,7 +298,7 @@ def pso_args(**kwargs):
             module_logger.critical(errormsg)
             sys.exit(1)
     for arg in list(set(pso_optinit_args + pso_optcall_args)):
-        try: 
+        try:
             optargs[arg] = kwargs[arg]
         except KeyError:
             pass
@@ -352,7 +352,7 @@ class PSO(object):
     pInertia = 0.7298
     pAcceleration = 2.9922
 
-    def __init__(self, parameters, evaluate, npart=10, ngen=100, 
+    def __init__(self, parameters, evaluate, npart=10, ngen=100,
                  objective_weights=(-1,), ErrTol=0.001, *args, **kwargs):
         """
         Create a particle swarm
@@ -439,7 +439,7 @@ class PSO(object):
         gbestpars = self.swarm.gbest.renormalized
         if self.parnames:
             self.logger.info("GBest parameters:\n"+
-                "\n".join(["{:>20s}  {}".format(name, val) 
+                "\n".join(["{:>20s}  {}".format(name, val)
                 for (name, val) in zip(self.parnames, gbestpars)]))
         else:
             self.logger.info("GBest parameters  : {}".format(gbestpars))

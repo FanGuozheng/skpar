@@ -1,7 +1,7 @@
 # References:
 # [1] Wahiduzzaman et al, JCTC 2013 _9_, exponent for Si is 12.8, and r0 is 4.4 a.u.
 # [2] Elstner et al, Phys Rev B 98
-# [3] A. Sieck, PhD. Thesis, University of Paderborn, 2000 
+# [3] A. Sieck, PhD. Thesis, University of Paderborn, 2000
 
 atomconfigs = {
     "Si": AtomConfig(
@@ -46,7 +46,7 @@ skbases = {
             ],
         maxpowers= [
             3,  # s
-            3,  # p 
+            3,  # p
             3,  # d
             ]
         ),
@@ -68,4 +68,4 @@ compressions = {
                               (4, %(Si_r_d)f), # d
                             ],
         ),
-} 
+}

@@ -1,0 +1,6 @@
+
+export PATH=$PWD:$PATH
+export PATH=$PWD/bin:$PATH
+export PYTHONPATH=$PWD:$PYTHONPATH
+export PYTHONPATH=$PWD/skpar:$PYTHONPATH
+

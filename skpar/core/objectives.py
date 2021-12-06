@@ -412,7 +412,7 @@ class ObjValues(Objective):
 
 
 class ObjKeyValuePairs(Objective):
-    """
+    """Get values from DFTB calculations with updated input parameters.
     """
     def __init__(self, spec, **kwargs):
         super().__init__(spec, **kwargs)
@@ -742,9 +742,7 @@ def get_objective(spec, **kwargs):
     else:
         nmod = len(m_names)
     spec['type'] = spec.get('type', get_type(nmod, spec['ref_data']))
-    #   print (spec['type'], spec['query'])
     objv = objectives_mapper.get(spec['type'], ObjValues)(spec, **kwargs)
-    #print (objv)
     return objv
 
 def set_objectives(spec, verbose=True, **kwargs):

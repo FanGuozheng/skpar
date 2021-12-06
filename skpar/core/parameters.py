@@ -180,6 +180,10 @@ def update_template(template, pardict):
     return template % pardict
 
 
+def update_skdef_hsd():
+    pass
+
+
 def update_parameters(workroot, templates, parameters, parnames=None):
     """Update relevant templates with new parameter values.
 

@@ -41,7 +41,7 @@ def get_labels(ss):
 # ----------------------------------------------------------------------
 class DetailedOut (dict):
     """A dictionary initialised from file with the detailed output of dftb+.
-    
+
     Useage:
 
         destination_dict = DetailedOut.fromfile(filename)
@@ -65,7 +65,7 @@ class DetailedOut (dict):
             # dftb 1.2
             ("Input/Output electrons (q):", ("nei", "neo")),
             # dftb 18.1 : "Input / Output electrons (q):"
-            ("Input / Output electrons (q):", ("nei", "neo")) 
+            ("Input / Output electrons (q):", ("nei", "neo"))
             ]
     # logical value
     conv_tags = [
@@ -88,7 +88,7 @@ class DetailedOut (dict):
                 # Energies
                 for tag in cls.energy_tags:
                     if tag[0] in line:
-                        # Energies are returned in [eV] (note the [-2], since 
+                        # Energies are returned in [eV] (note the [-2], since
                         # the penultimate word is the value in eV)
                         tagvalues[tag[1]] = float(words[-2])
                 # Number of electrons (note this may be fractional!)
@@ -221,9 +221,11 @@ def get_dftbp_evol(implargs, database, source, model,
 class BandsOut (dict):
     """A dictionary initialised with the bands from dp_bands or similar tool.
 
-    Useage:
+    Read all band structure data from `bands_tot.dat` from DFTB calculations.
 
+    Useage:
         destination_dict = BandsOut.fromfile(file)
+
     """
     def __init__(self, *args, **kwargs):
         self.update(*args, **kwargs)
@@ -351,7 +353,7 @@ def meff(band, kline):
     y = band    # [Hartree]
     c = np.polyfit(x,y,2)
     fit = np.poly1d(c)
-    #logger.debug('meff band: {}'.format(y)) 
+    #logger.debug('meff band: {}'.format(y))
     #logger.debug('meff kline: {}'.format(x))
     #logger.debug('meff poly1d (c2, c1, c0): {}'.format(c))
     # NOTA BENE:
@@ -366,7 +368,7 @@ def calc_masseff(bands, extrtype, kLineEnds, lattice, meff_tag=None,
                  usebandindex=False, **kwargs):
     """A complex wrapper around meff(), with higher level interface.
 
-    Calculate parabolic effective mass at the specified *extrtype* of 
+    Calculate parabolic effective mass at the specified *extrtype* of
     given *bands*, calculated along two points in k-space defined by a
     list of two 3-tuples - *kLineEnds*. *lattice* is a lattice object, defining
     the metric of the kspace.
@@ -374,15 +376,15 @@ def calc_masseff(bands, extrtype, kLineEnds, lattice, meff_tag=None,
     :param bands: an array (nb, nk) energy values in [eV], or a 1D array like
     :param extrtype: type of extremum to search for: 'min' or 'max',
                      handled by np.min()/max()
-    :param kLineEnds: two 3-tuples, defining the coordinates of the 
+    :param kLineEnds: two 3-tuples, defining the coordinates of the
                       endpoints of the k-line along which *band* is obtained,
-                      in terms of k-scace unit vectors, e.g. if *band* 
+                      in terms of k-scace unit vectors, e.g. if *band*
                       is obtained along a number of points from \Gamma to
                       X, of the BZ of a cubic lattice, then kLineEnds
                       should read ((0, 0, 0), (1, 0, 0))
     :param lattice: lattice object, holding mapping to kspace.
-    :param meff_name: the name to be featured in the logger 
-    :param Erange: Energy range [eV] over which to fit the parabola 
+    :param meff_name: the name to be featured in the logger
+    :param Erange: Energy range [eV] over which to fit the parabola
                    [dflt=8meV], i.e. 'depth' of the assumed parabolic well.
 
     :return meff: the value of the parabolic effective mass [m_0]
@@ -401,7 +403,7 @@ def calc_masseff(bands, extrtype, kLineEnds, lattice, meff_tag=None,
         is recognized (e.g. something like Gamma-X becomes GX.
         Prepend type of mass (me or mh) and index if more than 1 bands
         are requested, or if *usebandindex*.
-        
+
         Parameters:
             ix : int
                 Band index.
@@ -486,7 +488,7 @@ def calc_masseff(bands, extrtype, kLineEnds, lattice, meff_tag=None,
         _Erng = 0
         krange = [0]
         while len(krange) < 5 and _Erng < max(band)-min(band):
-            _Erng += Erng 
+            _Erng += Erng
             krange = np.where(abs(band-extr)<=_Erng)[0]
         if _Erng > Erng:
             logger.warning("Erange pushed from {:.3f} to {:.3f} eV, to "\
@@ -531,7 +533,7 @@ def calc_masseff(bands, extrtype, kLineEnds, lattice, meff_tag=None,
                 format(id=meff_id(ib), relpos=extr_relpos, ee=extr, nl=nlow, nh=nhigh))
 
         mass = meff(band[krange]/Eh, kline[krange]*aB)  # transform to atomic units
-        
+
         meff_data[meff_id(ib, usebandindex)] = (mass, extr, extr_relpos)
         logger.debug("Fitted  {id:8s}:{mass:8.3f} [m0], E_extr: {ee:8.3f} [eV], k_extr/klinelen: {relpos:.2f}".
                 format(id=meff_id(ib, usebandindex), mass=mass, relpos=extr_relpos, ee=extr))
@@ -672,12 +674,12 @@ def plot_fitmeff(ax, xx, x0, extremum, mass, dklen=None, ix0=None, *args, **kwar
         E"(k) = 1/mass => E(k) = E(x) = c2*x^2 + c1*x + c0.
 
     Since E"(x) = 2*c2 => c2 = 1/(2*mass).
-    Since E'(x) = 2*c2*x + c1, and E'(x=x0) = 0 and E(x=x0) = E0 
+    Since E'(x) = 2*c2*x + c1, and E'(x=x0) = 0 and E(x=x0) = E0
     => knowing E0 and x0, we can obtain c1 and c2:
 
         c1 = -2*c2*x0
         c0 = E0 - c2*x0^2 - c1*x0
-    
+
     """
     c2 = 1/(2*mass/Eh/aB/aB)    # NOTABENE: scaling to eV for E and AA^-1 for k
     c1 = -2*c2*x0
@@ -692,7 +694,7 @@ def plot_fitmeff(ax, xx, x0, extremum, mass, dklen=None, ix0=None, *args, **kwar
         yy = ff((np.array(xx)-ix0)*dklen)
     assert len(xx) == len(yy), "len xx: {:d} != len yy {:d}".format(len(xx), len(yy))
     ax.plot(xx, yy, **kwargs)
-    
+
 
 # ----------------------------------------------------------------------
 # Eigenvalues at special points of symmetry in the BZ
@@ -708,20 +710,20 @@ def get_Ek(bsdata, sympts):
     for ix, label in zip(kindexes, sympts):
         Ek[label] = bands[:, ix]
     return Ek
-    
+
 
 def greek (label):
     """Change Greek letter names to single Latin capitals, and vice versa.
 
     Useful for some names of high-symmetry points inside the BZ, to shorten
     the names of Gamma, Sigma and Delta.
-    Note that Lambda cannot be made into L, as it will make automatic L to 
-    Lambda as well, which is wrong since L is a standard point on the BZ 
+    Note that Lambda cannot be made into L, as it will make automatic L to
+    Lambda as well, which is wrong since L is a standard point on the BZ
     surface.
 
-    TODO: 
+    TODO:
           We should handle all this shit through unicode and not bother with
-          greek-to-latin mapping; just show nice greek caracters and that's 
+          greek-to-latin mapping; just show nice greek caracters and that's
           that. the issue is output and tests currently use mixture of
           Gamma and G extensively.
     """
@@ -740,7 +742,7 @@ def greek (label):
 def get_special_Ek(implargs, database, source, model=None, sympts=None,
                    extract={'cb': [0, ], 'vb': [0, ]}, align='Ef',
                    usebandindex=True, *args, **kwargs):
-    """Query bandstructure data and yield the eigenvalues at k-points of high-symmetry. 
+    """Query bandstructure data and yield the eigenvalues at k-points of high-symmetry.
     """
 
     # let the user mute extraction of vb or cb by providing only the alternative key

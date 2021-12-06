@@ -99,8 +99,6 @@ class Task():
             database(object or dict): a database object serving for data
                                       exchange
         """
-        # self.func(env, database, *self.args, **self.kwargs)
-        # print('database', database, '*self.args', *self.args, len(self.args), self.kwargs)
         self.func(env, database, *self.args, **self.kwargs)
     #
     def __repr__(self):

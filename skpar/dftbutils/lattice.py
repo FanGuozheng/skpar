@@ -2,7 +2,7 @@
     This module lists the component vectors of the direct and reciprocal lattices
     for different crystals.
     It is based on the following publication:
-    Wahyu Setyawan and Stefano Curtarolo, "High-throughput electronic band 
+    Wahyu Setyawan and Stefano Curtarolo, "High-throughput electronic band
     structure calculations: Challenges and tools", Comp. Mat. Sci. 49 (2010),
     pp. 291--312.
     """
@@ -283,13 +283,13 @@ class RHL(object):
                         self.a*np.array([c1/c2, 0., np.sqrt(1-(c1/c2)**2)]) ]
         self.convv = self.primv
         # The fractions defining the symmetry points in terms of reciprocal vectors
-        # are dependent on the angle alpha of the RHL lattice 
+        # are dependent on the angle alpha of the RHL lattice
         # So we cannot use the dictionary SymPts_k to get them.
         if self.alpha_rad < pi/2.:
             eta = (1 + 4 * np.cos(self.alpha_rad)) / (2 + 4 * np.cos(self.alpha_rad))
             nu  = 3./4. - eta/2.
             self.SymPts_k =\
-                { 'Gamma': (0, 0, 0), 
+                { 'Gamma': (0, 0, 0),
                     'B' : (eta, 1./2., 1-eta),
                     'B1': (1./2., 1-eta, eta-1),
                     'F' : (1./2., 1./2., 0),
@@ -325,13 +325,13 @@ class MCL(object):
     This is simple Monoclinic MCL_* (mP) lattice, set via
     a, b <= c, and alpha < 90 degrees, beta = gamma = 90 degrees as in
     W. Setyawan, S. Curtarolo / Computational Materials Science 49 (2010) 299-312.
-    Setting=ITC should work for the standard setting (angle>90) of ITC-A, 
+    Setting=ITC should work for the standard setting (angle>90) of ITC-A,
     but is not currently implemented.
     Note that conventional and primitive cells are the same.
     """
     def __init__(self, param, setting='curtarolo'):
         """
-        The default setting assumes that alpha < 90 as in 
+        The default setting assumes that alpha < 90 as in
         W. Setyawan, S. Curtarolo / Computational Materials Science 49 (2010) 299-312
         TODO: support for setting='ITC'
         """
@@ -344,7 +344,7 @@ class MCL(object):
         self.angle = beta
         self.setting = setting
         if setting == 'curtarolo':
-            assert (a<=c) and (b<=c) and (beta < 90) 
+            assert (a<=c) and (b<=c) and (beta < 90)
             a1c = a * np.array([1, 0, 0])
             a2c = b * np.array([0, 1, 0])
             a3c = c * np.array([0, np.cos(self.beta_rad), np.sin(self.beta_rad)])
@@ -353,23 +353,23 @@ class MCL(object):
             self.primv = self.convv
             #
             eta = ( 1 - self.b * np.cos(self.beta_rad) / self.c ) / ( 2 * (np.sin(self.beta_rad))**2 )
-            nu  = 1./2. - eta * self.c * np.cos(self.beta_rad) / self.b 
+            nu  = 1./2. - eta * self.c * np.cos(self.beta_rad) / self.b
             self.SymPts_k =\
                 { 'Gamma': (0., 0., 0.),
-                    'A'  : (1./2., 1./2., 0.), 
-                    'C'  : (0., 1./2., 1./2.), 
-                    'D'  : (1./2., 0., 1./2.), 
-                    'D1' : (1./2., 0., -1./2.), 
-                    'E'  : (1./2., 1./2., 1./2.), 
-                    'H'  : (0., eta, 1-nu), 
-                    'H1' : (0., 1-eta, nu), 
-                    'H2' : (0., eta, -nu), 
-                    'M'  : (1./2., eta, 1-nu), 
-                    'M1' : (1./2., 1-eta, nu), 
-                    'M2' : (1./2., eta, -nu), 
-                    'X'  : (0., 1./2., 0.), 
-                    'Y'  : (0., 0., 1./2.), 
-                    'Y1' : (0., 0., -1./2.), 
+                    'A'  : (1./2., 1./2., 0.),
+                    'C'  : (0., 1./2., 1./2.),
+                    'D'  : (1./2., 0., 1./2.),
+                    'D1' : (1./2., 0., -1./2.),
+                    'E'  : (1./2., 1./2., 1./2.),
+                    'H'  : (0., eta, 1-nu),
+                    'H1' : (0., 1-eta, nu),
+                    'H2' : (0., eta, -nu),
+                    'M'  : (1./2., eta, 1-nu),
+                    'M1' : (1./2., 1-eta, nu),
+                    'M2' : (1./2., eta, -nu),
+                    'X'  : (0., 1./2., 0.),
+                    'Y'  : (0., 0., 1./2.),
+                    'Y1' : (0., 0., -1./2.),
                     'Z'  : (1./2., 0., 0.), }
             self.standard_path = "Gamma-Y-H-C-E-M1-A-X-H1|M-D-Z|Y-D"
         else:
@@ -387,7 +387,7 @@ class MCLC(object):
         """
         Note that MCLC has several variants, depending on abc ordering and
         face(base) centering or not:
-        Additionally, ITC stipulates alpha > 90 degrees, while in 
+        Additionally, ITC stipulates alpha > 90 degrees, while in
         W. Setyawan, S. Curtarolo / Computational Materials Science 49 (2010) 299-312
         alpha < 90 is used.
         """
@@ -400,7 +400,7 @@ class MCLC(object):
         self.constants = [a, b, c, angle]
         self.setting = setting
         if setting == 'ITC' and self.angle_rad > pi/2.:
-            assert (a >= b) and (a >= c) and (angle > 90) 
+            assert (a >= b) and (a >= c) and (angle > 90)
             # conventional cell
             a1c = self.a * np.array([1, 0, 0])
             a2c = self.b * np.array([0, 1, 0])
@@ -412,8 +412,8 @@ class MCLC(object):
             a3p = a3c
             self.primv = np.array([a1p, a2p, a3p])
 
-            # The fractions defining the symmetry points in terms of reciprocal 
-            # cell-vectors are dependent on the angle alpha of the MCLC lattice 
+            # The fractions defining the symmetry points in terms of reciprocal
+            # cell-vectors are dependent on the angle alpha of the MCLC lattice
             # So we cannot use the dictionary SymPts_k to get them.
             psi = 3./4. - (self.b / (2 * self.a * np.sin(self.angle_rad)))**2
             phi = psi - ( 3./4. - psi ) * (self.a / self.c) * np.cos(self.angle_rad)
@@ -459,7 +459,7 @@ def get_recipr_cell (A,scale):
     """
     Given a set of set of three vectors *A*, assumed to be that defining
     the primitive cell, return the corresponding set of vectors that define
-    the reciprocal cell, *B*, scaled by the input parameter *scale*, 
+    the reciprocal cell, *B*, scaled by the input parameter *scale*,
     which defaults to 2pi. The B-vectors are computed as follows:
     B0 = scale * (A1 x A2)/(A0 . A1 x A2)
     B1 = scale * (A2 x A0)/(A0 . A1 x A2)
@@ -480,18 +480,18 @@ def get_recipr_cell (A,scale):
 def getSymPtLabel(kvec, lattice):
     """Return the symbol corresponding to a given k-vector, if named.
 
-    This routine returns the symbol of a symmetry point that is 
+    This routine returns the symbol of a symmetry point that is
     given in terms of reciprocal cell-vectors (*kvec* -- a 3-tuple)
     of the *lattice* object.
     """
     kLabel = None
-    
+
     # the tollerance bellow (atol) defines how loosely we can define the
     # k-points in the dftb_in.hsd. 1.e-4 means we need 3 digits after the dot.
     for lbl, kpt in list(lattice.SymPts_k.items()):
         if np.allclose(kvec, kpt, atol=1.e-4):
             kLabel = lbl
-            
+
     if not kLabel:
         logger.warning("Unable to match k-vector {0} to a symmetry point of {1} lattice".
                     format(kvec,lattice))
@@ -568,7 +568,7 @@ def len_pathsegments(lattice, scale=None, path=None):
         segments = subpath.split('-')
         for i, pt in enumerate(segments[:-1]):
             nextpt = segments[i+1]
-            s.append("{:>6s}-{:<6s}: {:.3f}".format(pt, nextpt, 
+            s.append("{:>6s}-{:<6s}: {:.3f}".format(pt, nextpt,
                 scale*np.linalg.norm(lattice.SymPts[pt]-lattice.SymPts[nextpt])))
     return '\n'.join(s)
 

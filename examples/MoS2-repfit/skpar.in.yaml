@@ -45,7 +45,7 @@ optimisation:
     algo: PSO   # particle swarm optimisation
     options:
         npart: 1   # number of particles
-        ngen : 1   # number of generations
+        ngen : 4   # number of generations
     parameters:
         # how do we choose the range for the spline values?
         - s1: [0.04, 0.08]
